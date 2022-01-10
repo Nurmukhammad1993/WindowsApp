@@ -21,6 +21,8 @@ class MAIN_window(QtWidgets.QMainWindow):
         self.spinBox_period = self.findChild(QtWidgets.QSpinBox, 'spinBox_period')
         self.spinBox_repeat_count.setMaximum(10)
         self.spinBox_period.setMaximum(60)
+        self.spinBox_repeat_count.setMinimum(1)
+        self.spinBox_period.setMinimum(1)
 
         self.spinBox_repeat_count.setValue(5)
         self.spinBox_period.setValue(5)
@@ -37,6 +39,7 @@ class MAIN_window(QtWidgets.QMainWindow):
         self.tableWidget.setColumnWidth(2, 135)
 
         self.pushButton.clicked.connect(self.read_device_value)
+        self.setWindowTitle("Дальномер")
 
 
     def set_value(self):
@@ -129,6 +132,7 @@ class BrowserHandler(QtCore.QObject):
         connection1 = create_modbus_connection(self.COM_FIRST, 1, 9600, 8, 1, 1)
         connection2 = create_modbus_connection(self.COM_SECOND, 2, 9600, 8, 1, 1)
         while i < self.spinBox_repeat_count:
+            self.progress.emit(True)
             # посылаем сигнал из второго потока в GUI поток
             Dict['Time'].append(str(time.strftime("%Y.%m.%d %H:%M:%S", time.localtime())))
             Dict['COM1'].append(
@@ -142,7 +146,7 @@ class BrowserHandler(QtCore.QObject):
             self.newText.emit(Dict)
             Dict = {'Time': [], 'COM1': [], 'COM2': [], 'iteration': []}
             time.sleep(self.spinBox_period)
-            self.progress.emit(True)
+
             i += 1
 
         self.progress.emit(False)

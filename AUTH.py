@@ -63,6 +63,8 @@ class AUTH_window(QtWidgets.QDialog):
         self.pushButton_First_Device_Success = False
         self.pushButton_Second_Device_Success = False
         self.pushButton.setStyleSheet("background-color :  red")
+        self.pushButton_First_Device.setEnabled(True)
+        self.pushButton_Second_Device.setEnabled(True)
 
 
     def pushButton_First_Device_clicked(self):
@@ -78,6 +80,7 @@ class AUTH_window(QtWidgets.QDialog):
             self.label_COM_FIRST.setText("Подключено по {} порту!!! ".format(self.First_Device_Current_COM))
             self.pushButton_First_Device.setStyleSheet("background-color :  rgb(0, 255, 127)")
             self.pushButton_First_Device_Success = True
+            self.pushButton_First_Device.setEnabled(False)
 
 
         if self.pushButton_First_Device_Success and self.pushButton_Second_Device_Success:
@@ -98,6 +101,7 @@ class AUTH_window(QtWidgets.QDialog):
             self.label_COM_SECOND.setText("Подключено по {} порту!!! ".format(self.Second_Device_Current_COM))
             self.pushButton_Second_Device.setStyleSheet("background-color :  rgb(0, 255, 127)")
             self.pushButton_Second_Device_Success = True
+            self.pushButton_Second_Device.setEnabled(False)
 
         if self.pushButton_First_Device_Success and self.pushButton_Second_Device_Success:
             self.pushButton.setStyleSheet("background-color :  rgb(0, 255, 127)")
