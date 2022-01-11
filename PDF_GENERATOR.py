@@ -39,7 +39,8 @@ class Generator(QRunnable):
     @pyqtSlot()
     def run(self):
         try:
-            outfile = "result.pdf"
+            test = self.data['doc_name'] + '.pdf'
+            outfile = test
 
             template = PdfReader("template.pdf", decompress=False).pages[0]
             template_obj = pagexobj(template)
@@ -107,6 +108,7 @@ class Window(QWidget):
         self.threadpool = QThreadPool()
 
         self.name = QLineEdit()
+        self.doc_name = QLineEdit()
         self.program_type = QLineEdit()
         self.product_code = QLineEdit()
         self.customer = QLineEdit()
@@ -120,6 +122,7 @@ class Window(QWidget):
 
         layout = QFormLayout()
         layout.addRow("Name", self.name)
+        layout.addRow("Document Name", self.doc_name)
         layout.addRow("Program Type", self.program_type)
         layout.addRow("Product Code", self.product_code)
         layout.addRow("Customer", self.customer)
@@ -135,6 +138,7 @@ class Window(QWidget):
         self.generate_btn.setDisabled(True)
         data = {
             'name': self.name.text(),
+            'doc_name': self.doc_name.text(),
             'program_type': self.program_type.text(),
             'product_code': self.product_code.text(),
             'customer': self.customer.text(),

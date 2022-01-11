@@ -18,6 +18,7 @@ from GLOBAL_FUNCTIONS import create_modbus_connection, serial_ports, message_box
 
 
 
+
 class AUTH_window(QtWidgets.QDialog):
     def __init__(self):
         super(AUTH_window, self).__init__()
