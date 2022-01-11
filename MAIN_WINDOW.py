@@ -16,6 +16,7 @@ class MAIN_window(QtWidgets.QMainWindow):
         self.label = self.findChild(QtWidgets.QLabel, 'label')
         self.pushButton = self.findChild(QtWidgets.QPushButton, 'pushButton')
         self.pushButton_pdf_generate = self.findChild(QtWidgets.QPushButton, 'pushButton_generate')
+        self.pushButton_stop = self.findChild(QtWidgets.QPushButton, 'pushButton_stop')
         self.lineEdit_values = self.findChild(QtWidgets.QLineEdit, 'lineEdit_values')
         self.tableWidget = self.findChild(QtWidgets.QTableWidget, 'tableWidget')
         self.spinBox_repeat_count = self.findChild(QtWidgets.QSpinBox, 'spinBox_repeat_count')
@@ -41,10 +42,17 @@ class MAIN_window(QtWidgets.QMainWindow):
 
         self.pushButton.clicked.connect(self.read_device_value)
         self.pushButton_pdf_generate.clicked.connect(self.generator_button_clicked)
+        self.pushButton_stop.clicked.connect(self.stop_button_clicked)
         self.pushButton_pdf_generate.setEnabled(False)
+        self.pushButton_stop.setEnabled(False)
         self.setWindowTitle("Дальномер")
 
         self.generator_window = Window()
+
+
+    def stop_button_clicked(self):
+        self.browserHandler.killthread()
+        self.pushButton_pdf_generate.setEnabled(False)
 
 
 
@@ -98,10 +106,13 @@ class MAIN_window(QtWidgets.QMainWindow):
         self.thread.start()
 
         self.browserHandler.progress.connect(self.change_button_color)
+        self.browserHandler.progress.connect(lambda : self.pushButton_stop.setEnabled(True))
         self.pushButton.setEnabled(False)
+        self.pushButton_pdf_generate.setEnabled(False)
 
         self.browserHandler.finished.connect(lambda: self.pushButton.setEnabled(True))
         self.browserHandler.finished.connect(lambda: self.pushButton_pdf_generate.setEnabled(True))
+        self.browserHandler.finished.connect(lambda: self.pushButton_stop.setEnabled(False))
 
     def change_button_color(self, state):
         if state:
@@ -125,11 +136,15 @@ class MAIN_window(QtWidgets.QMainWindow):
 
 # Объект, который будет перенесён в другой поток для выполнения кода
 class BrowserHandler(QtCore.QObject):
-    # running = False
+
     finished = QtCore.pyqtSignal()
     progress = QtCore.pyqtSignal(bool)
     newText = QtCore.pyqtSignal(dict)
+    running = True
     Dict = {}
+
+    def killthread(self):
+        self.running = False
 
     def set_connection_parameters(self, COM_FIRST, COM_SECOND, First_Device_ID, Second_Device_ID, repeat_count, period):
         self.COM_FIRST = COM_FIRST
@@ -146,7 +161,7 @@ class BrowserHandler(QtCore.QObject):
 
         connection1 = create_modbus_connection(self.COM_FIRST, 1, 9600, 8, 1, 1)
         connection2 = create_modbus_connection(self.COM_SECOND, 2, 9600, 8, 1, 1)
-        while i < self.spinBox_repeat_count:
+        while i < self.spinBox_repeat_count and self.running:
             self.progress.emit(True)
             # посылаем сигнал из второго потока в GUI поток
             Dict['Time'].append(str(time.strftime("%Y.%m.%d %H:%M:%S", time.localtime())))
@@ -160,9 +175,12 @@ class BrowserHandler(QtCore.QObject):
 
             self.newText.emit(Dict)
             Dict = {'Time': [], 'COM1': [], 'COM2': [], 'iteration': []}
+
             time.sleep(self.spinBox_period)
 
             i += 1
 
         self.progress.emit(False)
         self.finished.emit()
+
+

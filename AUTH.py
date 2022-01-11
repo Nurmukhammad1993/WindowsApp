@@ -80,6 +80,7 @@ class AUTH_window(QtWidgets.QDialog):
             # print('Bingo')
             self.label_COM_FIRST.setText("Подключено по {} порту!!! ".format(self.First_Device_Current_COM))
             self.pushButton_First_Device.setStyleSheet("background-color :  rgb(0, 255, 127)")
+            # self.pushButton_First_Device.setFont()
             self.pushButton_First_Device_Success = True
             self.pushButton_First_Device.setEnabled(False)
 
