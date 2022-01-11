@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1071</width>
-    <height>722</height>
+    <width>803</width>
+    <height>616</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -278,6 +278,19 @@
      </rect>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_generate">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>530</y>
+      <width>131</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Генерировать файл</string>
+    </property>
+   </widget>
    <widget class="QSpinBox" name="spinBox_period">
     <property name="geometry">
      <rect>
@@ -320,7 +333,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1071</width>
+     <width>803</width>
      <height>26</height>
     </rect>
    </property>

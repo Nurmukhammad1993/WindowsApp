@@ -7,7 +7,7 @@ import sys
 import minimalmodbus
 import time
 from GLOBAL_FUNCTIONS import create_modbus_connection, serial_ports, message_box_info
-
+from PDF_GENERATOR import Window
 
 class MAIN_window(QtWidgets.QMainWindow):
     def __init__(self):
@@ -15,6 +15,7 @@ class MAIN_window(QtWidgets.QMainWindow):
         loadUi('MAIN.ui', self)
         self.label = self.findChild(QtWidgets.QLabel, 'label')
         self.pushButton = self.findChild(QtWidgets.QPushButton, 'pushButton')
+        self.pushButton_pdf_generate = self.findChild(QtWidgets.QPushButton, 'pushButton_generate')
         self.lineEdit_values = self.findChild(QtWidgets.QLineEdit, 'lineEdit_values')
         self.tableWidget = self.findChild(QtWidgets.QTableWidget, 'tableWidget')
         self.spinBox_repeat_count = self.findChild(QtWidgets.QSpinBox, 'spinBox_repeat_count')
@@ -39,7 +40,14 @@ class MAIN_window(QtWidgets.QMainWindow):
         self.tableWidget.setColumnWidth(2, 135)
 
         self.pushButton.clicked.connect(self.read_device_value)
+        self.pushButton_pdf_generate.clicked.connect(self.generator_button_clicked)
         self.setWindowTitle("Дальномер")
+
+        self.generator_window = Window()
+
+    def generator_button_clicked(self):
+        self.generator_window.show()
+        # self.hide()
 
 
     def set_value(self):

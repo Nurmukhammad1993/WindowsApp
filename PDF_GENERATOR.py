@@ -160,7 +160,7 @@ class Window(QWidget):
             QMessageBox.information(self, "Finished", "PDF has been generated")
 
 
-app = QApplication([])
-w = Window()
-w.show()
-app.exec_()
+# app = QApplication([])
+# w = Window()
+# w.show()
+# app.exec_()
