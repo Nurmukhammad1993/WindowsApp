@@ -41,11 +41,16 @@ class MAIN_window(QtWidgets.QMainWindow):
 
         self.pushButton.clicked.connect(self.read_device_value)
         self.pushButton_pdf_generate.clicked.connect(self.generator_button_clicked)
+        self.pushButton_pdf_generate.setEnabled(False)
         self.setWindowTitle("Дальномер")
 
         self.generator_window = Window()
 
+
+
+
     def generator_button_clicked(self):
+        self.pushButton_pdf_generate.setEnabled(False)
         self.generator_window.show()
         # self.hide()
 
@@ -69,6 +74,7 @@ class MAIN_window(QtWidgets.QMainWindow):
         self.tableWidget.setHorizontalHeaderItem(0, QtWidgets.QTableWidgetItem('Время'))
         self.tableWidget.setHorizontalHeaderItem(1, QtWidgets.QTableWidgetItem('Устройство_1'))
         self.tableWidget.setHorizontalHeaderItem(2, QtWidgets.QTableWidgetItem('Устройство_2'))
+        self.tableWidget.setHorizontalHeaderItem(3, QtWidgets.QTableWidgetItem('Разница'))
 
     def read_device_value(self):
         # Перед началом новой записи, очищаем таблицу
@@ -95,6 +101,7 @@ class MAIN_window(QtWidgets.QMainWindow):
         self.pushButton.setEnabled(False)
 
         self.browserHandler.finished.connect(lambda: self.pushButton.setEnabled(True))
+        self.browserHandler.finished.connect(lambda: self.pushButton_pdf_generate.setEnabled(True))
 
     def change_button_color(self, state):
         if state:
